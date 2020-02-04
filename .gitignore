@@ -1,2 +1,8 @@
-**/logs
-**/node_modules/
+
+sigops/functions/node_modules/
+sigops/firebase.json
+sigops/.firebaserc
+**/firebase.json
+
+sigops/node_modules/
+
