@@ -10,11 +10,11 @@ app.use(cors());
 const { db } = require("./util/admin");
 
 const {
-  getAllSequences,
-  postOneSequence,
-  getSequence,
-  updateSequence
-} = require("./handlers/Sequence");
+  getAllWorkflows,
+  postOneWorkflow,
+  getWorkflow,
+  updateWorkflow
+} = require("./handlers/workflow");
 
 const {
   getAllProjects,
@@ -27,7 +27,7 @@ const {
   OperationOnProject,
   deleteOperation,
   getOperation,
-  OperationOnOperation,
+  WorkflowOnOperation,
   uploadDocument,
   getDocuments
 } = require("./handlers/operation");
@@ -41,21 +41,23 @@ const {
   getUserDetails
 } = require("./handlers/users");
 
-// Project Routes
+// Project Routes - works
 
 app.get("/Projects", FBAuth, getAllProjects);
-app.get("/Project/:ProjectId", getProject);
-app.post("/Project", FBAuth, postOneProject);
 
+app.get("/Project/:ProjectId", getProject);
+
+app.post("/Project", FBAuth, postOneProject);
+//operations on project works
 app.post("/Project/:ProjectId/Operation", OperationOnProject);
 
-// Sequence Routes
+// Workflow Routes
 
-app.get("/Sequences", getAllSequences);
-app.post("/Sequence", postOneSequence);
+app.get("/Workflows", getAllWorkflows);
+app.post("/Workflow", postOneWorkflow);
 
-app.post("/updateSequence/:SequenceId", updateSequence);
-app.get("/Sequence/:SequenceId", getSequence);
+app.post("/updateWorkflow/:WorkflowId", updateWorkflow);
+app.get("/Workflow/:WorkflowId", getWorkflow);
 
 // Operations Routes
 
@@ -64,11 +66,12 @@ app.post("/Operation/Upload/:OperationId", uploadDocument);
 app.get("/Operation/GetDocuments/:OperationId", getDocuments);
 
 app.get("/Operation/:OperationId", getOperation);
-app.post("/Operation/:OperationId/Sequence", SequenceOnOperation);
+//post works
+app.post("/Operation/:OperationId/Workflow", WorkflowOnOperation);
 
 app.delete("/Operation/:OperationId", FBAuth, deleteOperation); //security settings are messing this up and I will update it later.
 
-// user route
+// user route - works
 app.post("/user", FBAuth, addUserDetails);
 app.post("/user/image", FBAuth, uploadImage);
 app.post("/signup", signup);

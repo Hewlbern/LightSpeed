@@ -1,0 +1,22 @@
+html,
+body {
+	font-family: 'Poppins', sans-serif;
+	background-color: rgb(245, 245, 245);
+}
+
+.App {
+  padding-bottom: 50px;
+}
+
+.container {
+	margin: 40px auto 0 auto;
+  max-width: 1200px;
+}
+
+.nav-container {
+	margin: auto;
+}
+
+.bold {
+	font-weight: bold;
+}

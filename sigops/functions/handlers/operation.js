@@ -12,7 +12,7 @@ exports.getAllOperations = (req, res) => {
 			data.forEach((doc) => {
 				Operation.push({
 					OperationId: doc.id,
-					SequenceId: doc.data().SequenceId,
+					WorkflowId: doc.data().WorkflowId,
 					ProjectId: doc.data().ProjectId,
 					Project: doc.data().Project,
 					userHandle: doc.data().userHandle,
@@ -27,7 +27,7 @@ exports.getAllOperations = (req, res) => {
 		.catch((err) => console.error(err));
 };
 
-// creates new Operation and also new Sequence.
+// creates new Operation and also new Workflow.
 
 exports.OperationOnProject = (req, res) => {
 	const newOperation = {
@@ -36,7 +36,7 @@ exports.OperationOnProject = (req, res) => {
 		createdAt: new Date().toISOString()
 	};
 
-	const newSequence = {
+	const newWorkflow = {
 		createdAt: new Date().toISOString()
 	};
 	const newFiles = {
@@ -55,10 +55,10 @@ exports.OperationOnProject = (req, res) => {
 			return doc.ref.update({ OperationsCount: doc.data().OperationsCount + 1 });
 		})
 		.then(() => {
-			return db.collection('Sequence').add(newSequence);
+			return db.collection('Workflow').add(newWorkflow);
 		})
 		.then((doc) => {
-			newOperation.SequenceId = doc.id;
+			newOperation.WorkflowId = doc.id;
 			return db.collection('Operation').add(newOperation);
 		})
 		.then(() => {
@@ -82,12 +82,12 @@ exports.getOperation = (req, res) => {
 			}
 			operationData = doc.data();
 			operationData.OperationId = doc.id;
-			return db.collection('Sequence').orderBy('createdAt').where('OperationId', '==', req.params.OperationId).get();
+			return db.collection('Workflow').orderBy('createdAt').where('OperationId', '==', req.params.OperationId).get();
 		})
 		.then((data) => {
-			operationData.Sequence = [];
+			operationData.Workflow = [];
 			data.forEach((doc) => {
-				operationData.Sequence.push(doc.data());
+				operationData.Workflow.push(doc.data());
 			});
 			return res.json(operationData);
 		})
@@ -97,15 +97,15 @@ exports.getOperation = (req, res) => {
 		});
 };
 
-exports.SequenceOnOperation = (req, res) => {
-	if (req.body.body.trim() === '') return res.status(400).json({ Sequences: 'Must not be empty' });
+exports.WorkflowOnOperation = (req, res) => {
+	if (req.body.body.trim() === '') return res.status(400).json({ Workflow: 'Must not be empty' });
 
-	const newSequence = {
+	const newWorkflow = {
 		body: req.body.body,
 		createdAt: new Date().toISOString(),
 		OperationId: req.params.OperationId
 	};
-	console.log(newSequence);
+	console.log(newWorkflow);
 
 	db
 		.doc(`/Operation/${req.params.OperationId}`)
@@ -114,13 +114,13 @@ exports.SequenceOnOperation = (req, res) => {
 			if (!doc.exists) {
 				return res.status(404).json({ error: 'Operation not found' });
 			}
-			return doc.ref.update({ SequencesCount: doc.data().SequencesCount + 1 });
+			return doc.ref.update({ WorkflowsCount: doc.data().WorkflowsCount + 1 });
 		})
 		.then(() => {
-			return db.collection('Sequence').add(newSequence);
+			return db.collection('Workflow').add(newWorkflow);
 		})
 		.then(() => {
-			res.json(newSequence);
+			res.json(newWorkflow);
 		})
 		.catch((err) => {
 			console.log(err);
